@@ -1,8 +1,14 @@
+import os
 import time
 import pyautogui
 
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = True
+
+basedir = os.path.abspath(os.path.driname(__file__))
+ITEMS_TO_COLLECT = os.path.join(basedir, 'items_to_collect')
+BUTTONS = os.path.join(basedir, 'buttons')
+AREA_COORDS = os.path.join(basedir, 'area_coords')
 
 # Make production:
 def make_production(building='terrace', production='6'):
@@ -16,8 +22,9 @@ def make_production(building='terrace', production='6'):
         time.sleep(2)
         im = pyautogui.screenshot()
         try:
-            object = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\'+building+'.png',
-                                            confidence=0.8)
+            object = pyautogui.locateOnScreen(
+                os.path.join(ITEMS_TO_COLLECT, f'{building}.png') , confidence=0.8
+            )
             pyautogui.click(pyautogui.center(object))
             time.sleep(2)
             pyautogui.press(production)
@@ -35,11 +42,13 @@ def harvest_crops(coordfile, anchor_name):
                     to active "mouseDown")
         (name of files without extensions)
     '''
-    fileCOORD = open('C:\\Users\\arts\\Documents\\BOT\\'+coordfile+'.txt', 'r')
+    fileCOORD = open(os.path.join(AREA_COORDS, f'{coordfile}.txt'), 'r')
     coordList = fileCOORD.read().splitlines()
     fileCOORD.close()
     im = pyautogui.screenshot()
-    anchor = pyautogui.locateOnScreen(anchor_name+'.png', confidence=0.9)
+    anchor = pyautogui.locateOnScreen(
+        os.path.join(AREA_COORDS, f'{anchor_name}.png'), confidence=0.9
+    )
     pyautogui.mouseDown(pyautogui.center(anchor))
     for move in coordList:
         coord = move.split(',')
@@ -59,19 +68,20 @@ def spent_points(greatBuilding='rakieta'):
     while True:
         im = pyautogui.screenshot()
         try:
-            pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\points.png',
-                                    confidence=0.9)
+            pyautogui.locateOnScreen(os.path.join(basedir, 'points.png'), confidence=0.9)
             break
         except:
             # if there isn't empty space it means that there are points to spent:
-            building = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\'+greatBuilding+'.png',
-                                            confidence=0.9)
+            building = pyautogui.locateOnScreen(
+                os.path.join(ITEMS_TO_COLLECT, f'{greatBuilding}.png'), confidence=0.9
+            )
             pyautogui.click(pyautogui.center(building))
             time.sleep(3)
             im = pyautogui.screenshot()
             try:
-                topUp_max = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\top-up_max.png',
-                                                confidence=0.9)
+                topUp_max = pyautogui.locateOnScreen(
+                    os.path.join(basedir, 'top-up_max.png'), confidence=0.9
+                )
                 pyautogui.click(pyautogui.center(topUp_max))
             except:
                 pass
@@ -95,28 +105,31 @@ def support(mode='friends', visit_tavern=True):
         [visit_tavern]: [True, False] Do you want to visit user's tavern?
     '''
     try:
-        enroll_friends = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\enroll_friends.png')
+        enroll_friends = pyautogui.locateOnScreen(
+            os.path.join(BUTTONS, 'enroll_friends.png')
+        )
         pyautogui.click(pyautogui.center(enroll_friends))
     except:
         print('Not found.')
     try:
-        friends = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\'+mode+'.png',
-                                confidence=0.9)
+        friends = pyautogui.locateOnScreen(
+            os.path.join(BUTTONS, f'{mode}.png'), confidence=0.9
+        )
         pyautogui.click(pyautogui.center(friends))
     except:
         pass
-    fileCOORD = open('C:\\Users\\arts\\Documents\\BOT\\position_support.txt', 'r')
+    fileCOORD = open(os.path.join(AREA_COORDS, 'position_support.txt'), 'r')
     coordList = fileCOORD.read().splitlines()
     fileCOORD.close()
-    fileCOORD = open('C:\\Users\\arts\\Documents\\BOT\\position_visit_tavern.txt', 'r')
+    fileCOORD = open(os.path.join(AREA_COORDS, 'position_visit_tavern.txt'), 'r')
     coordList_t = fileCOORD.read().splitlines()
     fileCOORD.close()
-    back = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\back.png')
+    back = pyautogui.locateOnScreen(os.path.join(BUTTONS, 'back.png'))
     pyautogui.click(pyautogui.center(back))
     while True:
         pyautogui.click(300,200)
         try:
-            close = pyautogui.locateOnScreen('close_adv.png')
+            close = pyautogui.locateOnScreen(os.path.join(BUTTONS, 'close_adv.png'))
             pyautogui.click(pyautogui.center(close))
         except:
             pass
@@ -136,12 +149,12 @@ def support(mode='friends', visit_tavern=True):
             pyautogui.press('esc')
             pyautogui.press('esc')
         check = pyautogui.screenshot(region=(300,650, 300, 50))
-        next_friends = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\next_friends.png')
+        next_friends = pyautogui.locateOnScreen(os.path.join(BUTTONS, 'next_friends.png'))
         pyautogui.click(pyautogui.center(next_friends))
         if check == pyautogui.screenshot(region=(300,650, 300, 50)):
             break
     # roll friends' bar:
-    roll_friends = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\roll_friends.png')
+    roll_friends = pyautogui.locateOnScreen(os.path.join(BUTTONS, 'roll_friends.png'))
     pyautogui.click(pyautogui.center(roll_friends))
 
 def free_tavern():
@@ -149,17 +162,19 @@ def free_tavern():
         Assumption: My tavern is already visible on the screen.
     '''
     im = pyautogui.screenshot()
-    mytavern = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\mytavern.png',
-                                        confidence=0.9)
+    mytavern = pyautogui.locateOnScreen(
+        os.path.join(ITEMS_TO_COLLECT, 'mytavern.png'), confidence=0.9
+    )
     pyautogui.click(pyautogui.center(mytavern))
     time.sleep(5)
     im = pyautogui.screenshot()
     try:
-        collect_silver_coins = pyautogui.locateOnScreen('C:\\Users\\arts\\Documents\\BOT\\collect_silver_coins.png',
-                                                    confidence=0.9)
+        collect_silver_coins = pyautogui.locateOnScreen(
+            os.path.join(ITEMS_TO_COLLECT, 'collect_silver_coins.png'), confidence=0.9
+        )
         pyautogui.click(pyautogui.center(collect_silver_coins))
     except:
         pass
     time.sleep(2)
-    close = pyautogui.locateOnScreen('close_adv.png')
+    close = pyautogui.locateOnScreen(os.path.join(BUTTONS, 'close_adv.png'))
     pyautogui.click(pyautogui.center(close))
