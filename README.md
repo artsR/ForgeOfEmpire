@@ -1,4 +1,6 @@
 # ForgeOfEmpire
+Program do obsługi gry przeglądarkowej Forge of Empire. Jego zadaniem jest w głównej mierze zbieranie zakończonych zbiorów oraz załączanie nowej produkcji. Działanie programu oparte jest w głównej mierze na bibliotece pyautogui (kontrola ruchów myszki, screenshoty, znajdowanie elementów graficznych na  ekranie).
+
 
 Krótki opis plików:
 - manage.py
